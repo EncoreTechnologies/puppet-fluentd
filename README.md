@@ -139,7 +139,7 @@ Default value: 'TreasureData'
 
 #### `repo_url`
 
-Default value: 'http://packages.treasuredata.com/2/redhat/$releasever/$basearch'
+Default value: 'https://packages.treasuredata.com/2/redhat/$releasever/$basearch'
 
 #### `repo_enabled`
 

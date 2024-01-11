@@ -10,7 +10,7 @@ class fluentd::repo inherits fluentd {
         }
 
         $repo_url = pick($fluentd::repo_url,
-                          "http://packages.treasuredata.com/${version}/${os_name}/\$releasever/\$basearch")
+                          "https://packages.treasuredata.com/${version}/${os_name}/\$releasever/\$basearch")
         yumrepo { $fluentd::repo_name:
           descr    => $fluentd::repo_desc,
           baseurl  => $repo_url,
@@ -30,7 +30,7 @@ class fluentd::repo inherits fluentd {
         $distro_id = downcase($facts['lsbdistid'])
         $distro_codename = $facts['lsbdistcodename']
         $repo_url = pick($fluentd::repo_url,
-                          "http://packages.treasuredata.com/${version}/${distro_id}/${distro_codename}/")
+                          "https://packages.treasuredata.com/${version}/${distro_id}/${distro_codename}/")
 
         apt::source { $fluentd::repo_name:
           location     => $repo_url,
