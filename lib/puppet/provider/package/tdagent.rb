@@ -42,3 +42,4 @@ Puppet::Type.type(:package).provide :tdagent, parent: :gem, source: :gem do
       'fluent-gem'
     end
   end
+end
