@@ -23,7 +23,7 @@ Puppet::Type.type(:package).provide :tdagent, parent: :gem, source: :gem do
         'C:\\opt\\td-agent\\embedded\\bin',
       ]
     else
-      gem_cmd = 'td-agent-gem'
+      gem_cmd = gem_cmd_for_linux
       search_paths = [
         # v3, v4 and newer
         '/usr/sbin',
@@ -33,4 +33,12 @@ Puppet::Type.type(:package).provide :tdagent, parent: :gem, source: :gem do
     end
     which_from_paths(gem_cmd, search_paths)
   end
-end
+
+  def self.gem_cmd_for_linux
+    repo_version = Facter.value(:repo_version)
+    if repo_version && repo_version.to_i <= 4
+      'td-agent-gem'
+    else
+      'fluent-gem'
+    end
+  end
