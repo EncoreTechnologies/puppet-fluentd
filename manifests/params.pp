@@ -7,6 +7,7 @@ class fluentd::params {
   case $facts['os']['family'] {
     'RedHat': {
       if (versioncmp($facts['os']['release']['major'], '8') <= 0) {
+        $package_name = 'td-agent'
         $config_file = '/etc/td-agent/td-agent.conf'
         $config_file_mode = '0640'
         $config_path = '/etc/td-agent/config.d'
@@ -18,6 +19,7 @@ class fluentd::params {
         $service_name = 'td-agent'
       }
       else {
+        $package_name = 'fluentd'
         $config_file = '/etc/fluent/fluentd.conf'
         $config_file_mode = '0640'
         $config_path = '/etc/fluent/config.d'
@@ -64,7 +66,6 @@ class fluentd::params {
   $repo_gpgkey = 'https://packages.treasuredata.com/GPG-KEY-td-agent'
   $repo_gpgkeyid = 'BEE682289B2217F45AF4CC3F901F9177AB97ACBE'
 
-  $package_name = 'td-agent'
   $package_ensure = present
 
   $service_ensure = running

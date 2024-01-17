@@ -1,5 +1,12 @@
 ## Development
 
+## 2024-1-17 - Release v2.0.0
+
+- Adding support for v5 and setting default
+  fluentd/td-agent version from `v4` to `v5`
+
+  Contributed by Alex Chrystal (@asktheaxis)
+
 ## 2021-11-02 - Release v1.2.0
 
 - Add purge_config_dir parameter
