@@ -6,7 +6,7 @@ class fluentd::params {
 
   case $facts['os']['family'] {
     'RedHat': {
-      if (versioncmp($repo_version, '4') == 0) {
+      if $repo_version == 0 {
         $package_name = 'td-agent'
         $package_path = 'td-agent'
       }
