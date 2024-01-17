@@ -6,29 +6,36 @@ class fluentd::params {
 
   case $facts['os']['family'] {
     'RedHat': {
-      if (versioncmp($facts['os']['release']['major'], '8') <= 0) {
+      if (versioncmp($repo_version, '4') == 0) {
         $package_name = 'td-agent'
-        $config_file = '/etc/td-agent/td-agent.conf'
-        $config_file_mode = '0640'
-        $config_path = '/etc/td-agent/config.d'
-        $config_path_mode = '0750'
-        $config_owner = 'td-agent'
-        $config_group = 'td-agent'
-        $package_provider = undef
-        $repo_manage = true
-        $service_name = 'td-agent'
+        $package_path = 'td-agent'
       }
       else {
         $package_name = 'fluentd'
-        $config_file = '/etc/fluent/fluentd.conf'
+        $package_path = 'fluent'
+      }
+
+      if (versioncmp($facts['os']['release']['major'], '8') <= 0) {
+        $config_file = "/etc/${package_path}/${package_name}.conf"
         $config_file_mode = '0640'
-        $config_path = '/etc/fluent/config.d'
+        $config_path = "/etc/${package_path}/config.d"
         $config_path_mode = '0750'
-        $config_owner = 'fluentd'
-        $config_group = 'fluentd'
+        $config_owner = $package_name
+        $config_group = $package_name
         $package_provider = undef
         $repo_manage = true
-        $service_name = 'fluentd'
+        $service_name = $package_name
+      }
+      else {
+        $config_file = "/etc/${package_path}/fluentd.conf"
+        $config_file_mode = '0640'
+        $config_path = "/etc/${package_path}/config.d"
+        $config_path_mode = '0750'
+        $config_owner = $package_name
+        $config_group = $package_name
+        $package_provider = undef
+        $repo_manage = true
+        $service_name = $package_name
       }
     }
     'Debian': {
