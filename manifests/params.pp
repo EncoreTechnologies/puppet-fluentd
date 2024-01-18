@@ -14,7 +14,7 @@ class fluentd::params {
       }
       else {
         $package_name = 'fluent-package'
-        $owner_group_name = 'fluent'
+        $owner_group_name = 'fluentd'
         $package_path = 'fluent'
         $service_name = 'fluentd'
       }
