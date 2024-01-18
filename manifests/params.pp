@@ -5,49 +5,27 @@ class fluentd::params {
   $repo_version = '4'
 
   case $facts['os']['family'] {
-    'RedHat': {
-      if $repo_version == 0 {
+    'RedHat', 'Debian': {
+      if $repo_version == 4 {
         $package_name = 'td-agent'
         $package_path = 'td-agent'
+        $owner_group_name = 'td-agent'
+        $service_name = 'td-agent'
       }
       else {
-        $package_name = 'fluentd'
+        $package_name = 'fluent-package'
+        $owner_group_name = 'fluent'
         $package_path = 'fluent'
+        $service_name = 'fluentd'
       }
-
-      if (versioncmp($facts['os']['release']['major'], '8') <= 0) {
-        $config_file = "/etc/${package_path}/${package_name}.conf"
-        $config_file_mode = '0640'
-        $config_path = "/etc/${package_path}/config.d"
-        $config_path_mode = '0750'
-        $config_owner = $package_name
-        $config_group = $package_name
-        $package_provider = undef
-        $repo_manage = true
-        $service_name = $package_name
-      }
-      else {
-        $config_file = "/etc/${package_path}/fluentd.conf"
-        $config_file_mode = '0640'
-        $config_path = "/etc/${package_path}/config.d"
-        $config_path_mode = '0750'
-        $config_owner = $package_name
-        $config_group = $package_name
-        $package_provider = undef
-        $repo_manage = true
-        $service_name = $package_name
-      }
-    }
-    'Debian': {
-      $config_file = '/etc/td-agent/td-agent.conf'
+      $config_file = "/etc/${package_path}/${service_name}.conf"
       $config_file_mode = '0640'
-      $config_path = '/etc/td-agent/config.d'
+      $config_path = "/etc/${package_path}/config.d"
       $config_path_mode = '0750'
-      $config_owner = 'td-agent'
-      $config_group = 'td-agent'
+      $config_owner = $owner_group_name
+      $config_group = $owner_group_name
       $package_provider = undef
       $repo_manage = true
-      $service_name = 'td-agent'
     }
     'windows': {
       $config_file = 'C:/opt/td-agent/etc/td-agent/td-agent.conf'
