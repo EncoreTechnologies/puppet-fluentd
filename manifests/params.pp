@@ -4,20 +4,26 @@ class fluentd::params {
   $repo_desc = 'TreasureData'
   $repo_version = '4'
 
+  case $repo_version {
+    '4': {
+      $package_name = 'td-agent'
+      $package_path = 'td-agent'
+      $owner_group_name = 'td-agent'
+      $service_name = 'td-agent'
+    }
+    '5': {
+      $package_name = 'fluent-package'
+      $owner_group_name = 'fluentd'
+      $package_path = 'fluent'
+      $service_name = 'fluentd'
+    }
+    default: {
+      fail("Unsupported repo_version ${repo_version}")
+    }
+  }
+
   case $facts['os']['family'] {
     'RedHat', 'Debian': {
-      if $repo_version == 4 {
-        $package_name = 'td-agent'
-        $package_path = 'td-agent'
-        $owner_group_name = 'td-agent'
-        $service_name = 'td-agent'
-      }
-      else {
-        $package_name = 'fluent-package'
-        $owner_group_name = 'fluentd'
-        $package_path = 'fluent'
-        $service_name = 'fluentd'
-      }
       $config_file = "/etc/${package_path}/${service_name}.conf"
       $config_file_mode = '0640'
       $config_path = "/etc/${package_path}/config.d"
@@ -28,9 +34,9 @@ class fluentd::params {
       $repo_manage = true
     }
     'windows': {
-      $config_file = 'C:/opt/td-agent/etc/td-agent/td-agent.conf'
+      $config_file = "C:/opt/${package_path}/etc/${package_path}/${service_name}.conf"
       $config_file_mode = undef
-      $config_path = 'C:/opt/td-agent/etc/td-agent/config.d'
+      $config_path = "C:/opt/${package_path}/etc/${package_path}/config.d"
       $config_path_mode = undef
       $config_owner = 'Administrator'
       $config_group = 'Administrator'
@@ -39,7 +45,7 @@ class fluentd::params {
       # setup the Chocolatey sources correctly
       $repo_manage = false
       # windows service uses a different name
-      $service_name = 'fluentdwinsvc'
+      $service_name_windows = 'fluentdwinsvc'
     }
     default: {
       fail("Unsupported osfamily ${facts['os']['family']}")
