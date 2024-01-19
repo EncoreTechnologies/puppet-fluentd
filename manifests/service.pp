@@ -13,7 +13,7 @@ class fluentd::service inherits fluentd {
       }
     }
 
-    service { $fluentd::service_name_windows:
+    service { $fluentd::service_name:
       ensure => $fluentd::service_ensure,
       enable => $fluentd::service_enable,
     }
