@@ -10,12 +10,14 @@ class fluentd::params {
       $package_path = 'td-agent'
       $owner_group_name = 'td-agent'
       $service_name = 'td-agent'
+      $config_file_name = 'td-agent.conf'
     }
     '5': {
       $package_name = 'fluent-package'
       $owner_group_name = 'fluentd'
       $package_path = 'fluent'
       $service_name = 'fluentd'
+      $config_file_name = 'fluentd.conf'
     }
     default: {
       fail("Unsupported repo_version ${repo_version}")
@@ -25,7 +27,7 @@ class fluentd::params {
   case $facts['os']['family'] {
     'RedHat', 'Debian': {
       $parent_path = "/etc/${package_path}"
-      $config_file = "/etc/${package_path}/${service_name}.conf"
+      $config_file = "/etc/${package_path}/${config_file_name}"
       $config_file_mode = '0640'
       $config_path = "/etc/${package_path}/config.d"
       $config_path_mode = '0750'
@@ -36,7 +38,7 @@ class fluentd::params {
     }
     'windows': {
       $parent_path = "C:/opt/${package_path}"
-      $config_file = "C:/opt/${package_path}/etc/${package_path}/${service_name}.conf"
+      $config_file = "C:/opt/${package_path}/etc/${package_path}/${config_file_name}"
       $config_file_mode = undef
       $config_path = "C:/opt/${package_path}/etc/${package_path}/config.d"
       $config_path_mode = undef
