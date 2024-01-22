@@ -27,7 +27,7 @@ class fluentd::params {
   case $facts['os']['family'] {
     'RedHat', 'Debian': {
       $parent_path = "/etc/${package_path}"
-      $config_file = "/etc/${package_path}/${config_file_name}"
+      $config_file = "/etc/${package_path}/${service_name}.conf"
       $config_file_mode = '0640'
       $config_path = "/etc/${package_path}/config.d"
       $config_path_mode = '0750'

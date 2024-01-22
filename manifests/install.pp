@@ -42,7 +42,7 @@ class fluentd::install inherits fluentd {
     purge   => $fluentd::purge_config_dir,
   }
 
-  -> file { $fluentd::config_file_name:
+  -> file { $fluentd::config_file:
     ensure => file,
     source => "puppet:///modules/fluentd/${fluentd::config_file_name}",
     owner  => $fluentd::config_owner,
