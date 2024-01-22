@@ -8,6 +8,14 @@ class fluentd::install inherits fluentd {
     require  => Class['fluentd::repo'],
   }
 
+  # Ensure the parent directory exists
+  file { "/etc/${fluentd::package_path}":
+    ensure => directory,
+    owner  => $fluentd::config_owner,
+    group  => $fluentd::config_group,
+    mode   => $fluentd::config_path_mode,
+  }
+
   -> file { $fluentd::config_path:
     ensure  => directory,
     owner   => $fluentd::config_owner,

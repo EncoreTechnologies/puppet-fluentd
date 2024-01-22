@@ -1,5 +1,5 @@
 # Resource for installing a FluentD plugin
-define fluentd::plugin(
+define fluentd::plugin (
   String $plugin_ensure = present,
   Stdlib::Httpurl $plugin_source = 'https://rubygems.org',
   Array[Variant[String, Hash]] $plugin_install_options = [],

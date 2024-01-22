@@ -24,6 +24,7 @@ class fluentd::params {
 
   case $facts['os']['family'] {
     'RedHat', 'Debian': {
+      $parent_path = "/etc/${package_path}"
       $config_file = "/etc/${package_path}/${service_name}.conf"
       $config_file_mode = '0640'
       $config_path = "/etc/${package_path}/config.d"
@@ -34,6 +35,7 @@ class fluentd::params {
       $repo_manage = true
     }
     'windows': {
+      $parent_path = "C:/opt/${package_path}"
       $config_file = "C:/opt/${package_path}/etc/${package_path}/${service_name}.conf"
       $config_file_mode = undef
       $config_path = "C:/opt/${package_path}/etc/${package_path}/config.d"
