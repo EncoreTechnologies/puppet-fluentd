@@ -2,7 +2,23 @@
 class fluentd::install inherits fluentd {
   contain fluentd::repo
 
-  package { $package_name:
+  # Ensure the user exists
+  if $fluentd::config_owner {
+    user { $fluentd::config_owner:
+      ensure => present,
+      before => File[$fluentd::parent_path],
+    }
+  }
+
+  # Ensure the group exists
+  if $fluentd::config_group {
+    group { $fluentd::config_group:
+      ensure => present,
+      before => File[$fluentd::parent_path],
+    }
+  }
+
+  package { $fluentd::package_name:
     ensure   => $fluentd::package_ensure,
     provider => $fluentd::package_provider,
     require  => Class['fluentd::repo'],
