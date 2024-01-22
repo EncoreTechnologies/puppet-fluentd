@@ -42,9 +42,9 @@ class fluentd::install inherits fluentd {
     purge   => $fluentd::purge_config_dir,
   }
 
-  -> file { $fluentd::config_file:
+  -> file { $fluentd::config_file_name:
     ensure => file,
-    source => 'puppet:///modules/fluentd/td-agent.conf',
+    source => "puppet:///modules/fluentd/${fluentd::config_file_name}",
     owner  => $fluentd::config_owner,
     group  => $fluentd::config_group,
     mode   => $fluentd::config_file_mode,
