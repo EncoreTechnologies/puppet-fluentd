@@ -10,6 +10,10 @@ Puppet::ResourceApi.register_type(
   # of the service recovery resources (slow)
   features: ['simple_get_filter', 'supports_noop'],
   attributes: {
+    ensure: {
+        type: 'Enum[present, absent]',
+        desc: 'Whether this service key should be present or absent on the target system.',
+    },
     name: {
       type:      'String[1]',
       behaviour: :namevar,
