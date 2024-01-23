@@ -14,6 +14,11 @@ Puppet::ResourceApi.register_type(
         type: 'Enum[present, absent]',
         desc: 'Whether this service key should be present or absent on the target system.',
     },
+    install_options: {
+      type: 'Array[Variant[String, Hash]]',
+      desc: 'Options to pass to the gem install command',
+      behavior: :parameter,
+    },
     name: {
       type:      'String[1]',
       behaviour: :namevar,
@@ -22,6 +27,11 @@ Puppet::ResourceApi.register_type(
     repo_version: {
       type: 'String',
       desc: 'The version of the repository',
+      behavior: :parameter,
+    },
+    source: {
+      type: 'String',
+      desc: 'The source of the gem',
       behavior: :parameter,
     },
   },

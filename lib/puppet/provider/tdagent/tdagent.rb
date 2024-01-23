@@ -1,9 +1,9 @@
-Puppet::Type.type(:tdagent).provide :tdagent, parent: :gem, source: :gem do
-  has_feature :install_options, :versionable
+Puppet::Type.type(:tdagent).provide(:tdagent, parent: Puppet::Provider::Package) do
+  desc 'TD Agent provider'
+
+  commands tdagent: 'td-agent'
 
   def self.which_from_paths(command, paths)
-    # copied/inspired by puppet/util.rb which() function
-    # this allows you to pass in your own custom search paths
     paths.each do |dir|
       dest = File.expand_path(File.join(dir, command))
       return dest if FileTest.file?(dest) && FileTest.executable?(dest)
@@ -12,29 +12,23 @@ Puppet::Type.type(:tdagent).provide :tdagent, parent: :gem, source: :gem do
   end
 
   def self.provider_command
-    # FUTURE: if this still isn't good enough in the future we could append the PATH
-    #         components and look there too
     if Puppet::Util::Platform.windows?
-      gem_cmd = 'fluent-gem.bat'
+      tdagent_cmd = 'fluent-gem.bat'
       search_paths = [
-        # v4 and newer
         'C:\\opt\\td-agent\\bin',
-        # v3 and older
         'C:\\opt\\td-agent\\embedded\\bin',
       ]
     else
-      gem_cmd = gem_cmd_for_linux
+      tdagent_cmd = tdagent_cmd_for_linux
       search_paths = [
-        # v3, v4 and newer
         '/usr/sbin',
-        # v0
         '/opt/td-agent/usr/sbin',
       ]
     end
-    which_from_paths(gem_cmd, search_paths)
+    which_from_paths(tdagent_cmd, search_paths)
   end
 
-  def self.gem_cmd_for_linux
+  def self.tdagent_cmd_for_linux
     version = Facter.value(:repo_version)
     case version
     when '4'
@@ -42,5 +36,28 @@ Puppet::Type.type(:tdagent).provide :tdagent, parent: :gem, source: :gem do
     else
       'fluent-gem'
     end
+  end
+
+  def create
+    tdagent('install', resource[:name], '-v', resource[:ensure])
+  end
+
+  def destroy
+    tdagent('uninstall', resource[:name])
+  end
+
+  def exists?
+    output = tdagent('list', '--local')
+    output.include?(resource[:name])
+  end
+
+  def version
+    output = tdagent('list', '--local')
+    match = output.match(/#{Regexp.escape(resource[:name])}\s+\((\S+)\)/)
+    match[1] if match
+  end
+
+  def version=(value)
+    tdagent('update', resource[:name], '-v', value)
   end
 end

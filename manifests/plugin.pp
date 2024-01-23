@@ -5,7 +5,7 @@ define fluentd::plugin (
   Array[Variant[String, Hash]] $plugin_install_options = [],
   String $plugin_provider = tdagent,
 ) {
-  package { $title:
+  tdagent { $title:
     ensure          => $plugin_ensure,
     source          => $plugin_source,
     install_options => $plugin_install_options,
