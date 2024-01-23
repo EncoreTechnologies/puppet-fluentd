@@ -1,8 +1,6 @@
 Puppet::Type.type(:tdagent).provide(:tdagent, parent: Puppet::Provider::Package) do
   desc 'TD Agent provider'
 
-  commands tdagent: tdagent_cmd_for_linux
-
   def self.which_from_paths(command, paths)
     paths.each do |dir|
       dest = File.expand_path(File.join(dir, command))
@@ -39,25 +37,25 @@ Puppet::Type.type(:tdagent).provide(:tdagent, parent: Puppet::Provider::Package)
   end
 
   def create
-    tdagent('gem', 'install', resource[:name], '-v', resource[:ensure], '--source', resource[:source], *resource[:install_options])
+    system(self.class.provider_command, 'gem', 'install', resource[:name], '-v', resource[:ensure], '--source', resource[:source], *resource[:install_options])
   end
 
   def destroy
-    tdagent('gem', 'uninstall', resource[:name])
+    system(self.class.provider_command, 'gem', 'uninstall', resource[:name])
   end
 
   def exists?
-    output = tdagent('gem', 'list', '--local')
+    output = `#{self.class.provider_command} gem list --local`
     output.include?(resource[:name])
   end
 
   def version
-    output = tdagent('gem', 'list', '--local')
+    output = `#{self.class.provider_command} gem list --local`
     match = output.match(/#{Regexp.escape(resource[:name])}\s+\((\S+)\)/)
     match[1] if match
   end
 
   def version=(value)
-    tdagent('gem', 'update', resource[:name], '-v', value, '--source', resource[:source], *resource[:install_options])
+    system(self.class.provider_command, 'gem', 'update', resource[:name], '-v', value, '--source', resource[:source], *resource[:install_options])
   end
 end
