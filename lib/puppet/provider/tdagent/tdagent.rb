@@ -1,4 +1,4 @@
-Puppet::Type.type(:package).provide :tdagent, parent: :gem, source: :gem do
+Puppet::Type.type(:tdagent).provide :tdagent, parent: :gem, source: :gem do
   has_feature :install_options, :versionable
 
   def self.which_from_paths(command, paths)
