@@ -18,10 +18,11 @@ class fluentd::install inherits fluentd {
     }
   }
 
-  package { $fluentd::package_name:
-    ensure   => $fluentd::package_ensure,
-    provider => $fluentd::package_provider,
-    require  => Class['fluentd::repo'],
+  tdagent { $fluentd::package_name:
+    ensure       => $fluentd::package_ensure,
+    provider     => $fluentd::package_provider,
+    repo_version => $fluentd::repo_version,
+    require      => Class['fluentd::repo'],
   }
 
   # Ensure the parent directory exists

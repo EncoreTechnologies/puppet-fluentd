@@ -35,8 +35,9 @@ Puppet::Type.type(:package).provide :tdagent, parent: :gem, source: :gem do
   end
 
   def self.gem_cmd_for_linux
-    repo_version = Facter.value(:repo_version)
-    if repo_version && repo_version.to_i <= 4
+    version = Facter.value(:repo_version)
+    case version
+    when '4'
       'td-agent-gem'
     else
       'fluent-gem'
