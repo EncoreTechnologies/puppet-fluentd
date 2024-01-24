@@ -30,5 +30,10 @@ Puppet::ResourceApi.register_type(
       desc: 'The version of the repository',
       behavior: :parameter,
     },
+    source: {
+      type: 'String',
+      desc: 'The source of the gem',
+      behavior: :parameter,
+    },
   },
 )
