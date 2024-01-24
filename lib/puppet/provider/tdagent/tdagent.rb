@@ -36,7 +36,10 @@ Puppet::Type.type(:tdagent).provide(:tdagent, parent: Puppet::Type.type(:package
   end
   
   def create
-    system(self.class.provider_command(resource[:repo_version]), 'gem', 'install', resource[:name], '-v', resource[:ensure], '--source', resource[:source], *resource[:install_options])
+    command = [self.class.provider_command(resource[:repo_version]), 'gem', 'install', resource[:name], '-v', resource[:ensure]]
+    command += ['--source', resource[:source]] unless resource[:source].nil?
+    command += resource[:install_options]
+    system(*command)
   end
   
   def destroy

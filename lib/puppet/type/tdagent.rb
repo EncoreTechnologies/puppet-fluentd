@@ -31,7 +31,7 @@ Puppet::ResourceApi.register_type(
       behavior: :parameter,
     },
     source: {
-      type: 'String',
+      type: 'Optional[String]',
       desc: 'The source of the gem',
       behavior: :parameter,
     },
