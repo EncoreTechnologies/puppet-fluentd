@@ -21,9 +21,9 @@ Puppet::ResourceApi.register_type(
       default: [],
     },
     name: {
-      type:      'String[1]',
-      behaviour: :namevar,
-      desc:      'Name of the service to register in Windows, this is the "short" name visible when looking at service properties or querying with sc.exe.',
+      type:  'String[1]',
+      behavior: :namevar,
+      desc:  'Name of the service to register in Windows, this is the "short" name visible when looking at service properties or querying with sc.exe.',
     },
     repo_version: {
       type: 'String',
