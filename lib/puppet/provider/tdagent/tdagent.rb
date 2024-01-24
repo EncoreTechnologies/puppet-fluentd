@@ -1,4 +1,4 @@
-Puppet::Type.type(:tdagent).provide(:tdagent, parent: Puppet::Provider::Package::Gem) do
+Puppet::Type.type(:tdagent).provide(:tdagent, parent: Puppet::Type.type(:package).provide(:gem)) do
   desc 'TD Agent provider'
 
   def self.which_from_paths(command, paths)
