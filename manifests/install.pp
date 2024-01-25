@@ -25,7 +25,7 @@ class fluentd::install inherits fluentd {
       require  => Class['fluentd::repo'],
     }
   } else {
-    tdagent { $fluentd::package_name:
+    package { $fluentd::package_name:
       ensure       => $fluentd::package_ensure,
       repo_version => $fluentd::repo_version,
       require      => Class['fluentd::repo'],
