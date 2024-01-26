@@ -35,20 +35,24 @@ Puppet::Type.type(:tdagent).provide(:tdagent, parent: Puppet::Type.type(:package
     end
   end
   
+  def package_name
+    resource[:repo_version] == '4' ? 'td-agent' : 'fluentd'
+  end
+  
   def create
-    command = [self.class.provider_command(resource[:repo_version]), 'gem', 'install', resource[:name], '-v', resource[:ensure]]
+    command = [self.class.provider_command(resource[:repo_version]), 'gem', 'install', package_name, '-v', resource[:ensure]]
     command += ['--source', resource[:source]] unless resource[:source].nil?
     command += resource[:install_options]
     system(*command)
   end
   
   def destroy
-    system(self.class.provider_command(resource[:repo_version]), 'gem', 'uninstall', resource[:name])
+    system(self.class.provider_command(resource[:repo_version]), 'gem', 'uninstall', package_name)
   end
   
   def exists?
     output = `#{self.class.provider_command(resource[:repo_version])} gem list --local`
-    output.include?(resource[:name])
+    output.include?(package_name)
   end
   
   def version
