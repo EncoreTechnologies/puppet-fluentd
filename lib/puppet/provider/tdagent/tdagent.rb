@@ -1,4 +1,4 @@
-Puppet::Type.type(:tdagent).provide(:tdagent, parent: Puppet::Type.type(:package).provide(:gem)) do
+Puppet::Type.type(:package).provide(:tdagent, parent: Puppet::Type.type(:package).provide(:gem)) do
   desc 'TD Agent provider'
 
   def self.which_from_paths(command, paths)
@@ -40,23 +40,37 @@ Puppet::Type.type(:tdagent).provide(:tdagent, parent: Puppet::Type.type(:package
   end
   
   def create
-    command = [self.class.provider_command(resource[:repo_version]), 'gem', 'install', resource[:name], '-v', resource[:ensure]]
+    command = [self.class.provider_command(resource[:repo_version]), 'install', resource[:title], '-v', resource[:ensure]]
     command += ['--source', resource[:source]] unless resource[:source].nil?
-    command += resource[:install_options]
+    
+    Array(resource[:install_options]).each do |option|
+      case option
+      when String
+        command << option
+      when Hash
+        option.each do |key, value|
+          command << "--#{key}=#{value}"
+        end
+      end
+    end
+    
     system(*command)
   end
   
   def destroy
-    system(self.class.provider_command(resource[:repo_version]), 'gem', 'uninstall', resource[:name])
+    command = [self.class.provider_command(resource[:repo_version]), 'uninstall', resource[:title]]
+    system(*command) or raise "Command failed: #{command.join(' ')}"
   end
   
   def exists?
-    output = `#{self.class.provider_command(resource[:repo_version])} gem list --local`
-    output.include?(resource[:name])
+    output = `#{self.class.provider_command(resource[:repo_version])} list --local`
+    puts "exists? output: #{output}"
+    output.include?(resource[:title])
   end
   
   def version
-    output = `#{self.class.provider_command(resource[:repo_version])} gem list --local`
+    output = `#{self.class.provider_command(resource[:repo_version])} list --local`
+    puts "exists? output: #{output}"
     match = output.match(/#{Regexp.escape(resource[:name])}\s+\((\S+)\)/)
     match[1] if match
   end
