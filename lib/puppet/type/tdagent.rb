@@ -7,6 +7,11 @@ Puppet::Type.newtype(:tdagent) do
     newvalues(:present, :absent)
   end
 
+  newparam(:enable) do
+    desc 'Whether this service should be enabled at boot.'
+    newvalues(:true, :false)
+  end
+
   newparam(:name, namevar: true) do
     desc 'Name of the service to register in Windows, this is the "short" name visible when looking at service properties or querying with sc.exe.'
   end

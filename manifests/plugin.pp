@@ -6,7 +6,7 @@ define fluentd::plugin (
   String $plugin_provider = tdagent,
   String $repo_version = '4',
 ) {
-  tdagent { $title:
+  package { $title:
     ensure          => $plugin_ensure,
     source          => $plugin_source,
     install_options => $plugin_install_options,

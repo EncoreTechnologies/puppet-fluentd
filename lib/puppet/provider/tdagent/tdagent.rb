@@ -40,7 +40,8 @@ Puppet::Type.type(:package).provide(:tdagent, parent: Puppet::Type.type(:package
   end
   
   def create
-    command = [self.class.provider_command(resource[:repo_version]), 'install', resource[:title], '-v', resource[:ensure]]
+    command = [self.class.provider_command(resource[:repo_version]), 'install', resource[:title]]
+    command += ['-v', resource[:ensure]] unless resource[:ensure].nil? || resource[:ensure] == 'present'
     command += ['--source', resource[:source]] unless resource[:source].nil?
     
     Array(resource[:install_options]).each do |option|
