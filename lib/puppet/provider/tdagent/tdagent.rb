@@ -40,19 +40,19 @@ Puppet::Type.type(:tdagent).provide(:tdagent, parent: Puppet::Type.type(:package
   end
   
   def create
-    command = [self.class.provider_command(resource[:repo_version]), 'gem', 'install', package_name, '-v', resource[:ensure]]
+    command = [self.class.provider_command(resource[:repo_version]), 'gem', 'install', resource[:name], '-v', resource[:ensure]]
     command += ['--source', resource[:source]] unless resource[:source].nil?
     command += resource[:install_options]
     system(*command)
   end
   
   def destroy
-    system(self.class.provider_command(resource[:repo_version]), 'gem', 'uninstall', package_name)
+    system(self.class.provider_command(resource[:repo_version]), 'gem', 'uninstall', resource[:name])
   end
   
   def exists?
     output = `#{self.class.provider_command(resource[:repo_version])} gem list --local`
-    output.include?(package_name)
+    output.include?(resource[:name])
   end
   
   def version

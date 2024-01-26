@@ -1,39 +1,35 @@
-require 'puppet/resource_api'
+# lib/puppet/type/tdagent.rb
+Puppet::Type.newtype(:tdagent) do
+  @doc = "Manages the Gem provider for Linux (tdagent / fluentd) for FluentD"
 
-# Manages the Windows Service registration for FluentD
-Puppet::ResourceApi.register_type(
-  name: 'tdagent',
-  desc: <<-EOS,
-    Manages the Gem provider for Linux (tdagent / fluentd) for FluentD
-  EOS
-  # specify this simple_get_filter so we don't have to query for _all_ instances
-  # of the service recovery resources (slow)
-  features: ['simple_get_filter', 'supports_noop'],
-  attributes: {
-    ensure: {
-        type: 'Enum[present, absent]',
-        desc: 'Whether this service key should be present or absent on the target system.',
-    },
-    install_options: {
-      type: 'Array[Variant[String, Hash]]',
-      desc: 'Options to pass to the gem install command',
-      behavior: :parameter,
-      default: [],
-    },
-    name: {
-      type:  'String[1]',
-      behavior: :namevar,
-      desc:  'Name of the service to register in Windows, this is the "short" name visible when looking at service properties or querying with sc.exe.',
-    },
-    repo_version: {
-      type: 'String',
-      desc: 'The version of the repository',
-      behavior: :parameter,
-    },
-    source: {
-      type: 'Optional[String]',
-      desc: 'The source of the gem',
-      behavior: :parameter,
-    },
-  },
-)
+  ensurable do
+    desc 'Whether this service key should be present or absent on the target system.'
+    newvalues(:present, :absent)
+  end
+
+  newparam(:name, namevar: true) do
+    desc 'Name of the service to register in Windows, this is the "short" name visible when looking at service properties or querying with sc.exe.'
+  end
+
+  newparam(:install_options) do
+    desc 'Options to pass to the gem install command'
+    defaultto []
+  end
+
+  newparam(:repo_version) do
+    desc 'The version of the repository'
+  end
+
+  newparam(:source) do
+    desc 'The source of the gem'
+  end
+
+  newparam(:provider) do
+    desc 'The provider to use to manage the Fluentd plugin.'
+    defaultto :tdagent
+  end
+
+  autorequire(:class) do
+    ['fluentd::install', 'fluentd::service']
+  end
+end
