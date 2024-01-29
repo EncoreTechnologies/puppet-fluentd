@@ -36,7 +36,8 @@ Puppet::Type.type(:package).provide(:tdagent, parent: Puppet::Type.type(:package
   end
 
   def package_name
-    resource[:repo_version] == '4' ? 'td-agent' : 'fluentd'
+    repo_version = resource[:install_options].find { |option| option['repo_version'] }['repo_version']
+    repo_version == '4' ? 'td-agent' : 'fluentd'
   end
 
   def create
