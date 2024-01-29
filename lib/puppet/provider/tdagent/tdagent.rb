@@ -25,7 +25,7 @@ Puppet::Type.type(:package).provide(:tdagent, parent: Puppet::Type.type(:package
     end
     which_from_paths(tdagent_cmd, search_paths)
   end
-  
+
   def self.tdagent_cmd_for_linux(repo_version)
     case repo_version
     when '4'
@@ -34,16 +34,16 @@ Puppet::Type.type(:package).provide(:tdagent, parent: Puppet::Type.type(:package
       'fluent-gem'
     end
   end
-  
+
   def package_name
     resource[:repo_version] == '4' ? 'td-agent' : 'fluentd'
   end
-  
+
   def create
     command = [self.class.provider_command(resource[:repo_version]), 'install', resource[:title]]
     command += ['-v', resource[:ensure]] unless resource[:ensure].nil? || resource[:ensure] == 'present'
     command += ['--source', resource[:source]] unless resource[:source].nil?
-    
+
     Array(resource[:install_options]).each do |option|
       case option
       when String
@@ -54,21 +54,21 @@ Puppet::Type.type(:package).provide(:tdagent, parent: Puppet::Type.type(:package
         end
       end
     end
-    
+
     system(*command)
   end
-  
+
   def destroy
     command = [self.class.provider_command(resource[:repo_version]), 'uninstall', resource[:title]]
     system(*command) or raise "Command failed: #{command.join(' ')}"
   end
-  
+
   def exists?
     output = `#{self.class.provider_command(resource[:repo_version])} list --local`
     puts "exists? output: #{output}"
     output.include?(resource[:title])
   end
-  
+
   def version
     output = `#{self.class.provider_command(resource[:repo_version])} list --local`
     puts "exists? output: #{output}"
