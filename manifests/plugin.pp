@@ -6,11 +6,13 @@ define fluentd::plugin (
   String $plugin_provider = tdagent,
   String $repo_version = '4',
 ) {
+  $repo_version_option = { 'repo_version' => $repo_version }
+  $all_install_options = [$repo_version_option, $plugin_install_options].flatten
+
   package { $title:
     ensure          => $plugin_ensure,
     source          => $plugin_source,
-    install_options => $plugin_install_options,
-    repo_version    => $repo_version,
+    install_options => $all_install_options,
     provider        => $plugin_provider,
     notify          => Class['fluentd::service'],
     require         => Class['fluentd::install'],
