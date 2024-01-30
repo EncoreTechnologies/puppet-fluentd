@@ -36,8 +36,6 @@ class fluentd (
   # Add repo_version to each plugin
   $plugins_with_repo_version = $plugins.map |$title, $params| {
     { $title => $params + { 'repo_version' => $repo_version } }
-  }.reduce({}) |$memo, $res| {
-    $memo.merge($res)
   }
 
   create_resources('fluentd::plugin', $plugins_with_repo_version)

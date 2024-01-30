@@ -1,6 +1,8 @@
 Puppet::Type.type(:package).provide(:tdagent, parent: Puppet::Type.type(:package).provide(:gem)) do
   desc 'TD Agent provider'
 
+  has_feature :versionable, :install_options, :uninstall_options
+
   def initialize(value = {})
     super(value)
     @repo_version = repo_version_get
@@ -41,10 +43,6 @@ Puppet::Type.type(:package).provide(:tdagent, parent: Puppet::Type.type(:package
     end
   end
 
-  def package_name
-    @repo_version == '4' ? 'td-agent' : 'fluentd'
-  end
-
   def repo_version_get
     install_options = resource[:install_options]
     install_options.each_with_index do |option, index|
@@ -55,6 +53,10 @@ Puppet::Type.type(:package).provide(:tdagent, parent: Puppet::Type.type(:package
       end
     end
     nil
+  end
+
+  def package_name
+    @repo_version == '4' ? 'td-agent' : 'fluentd'
   end
 
   def create
