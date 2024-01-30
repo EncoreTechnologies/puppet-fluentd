@@ -5,7 +5,7 @@ Puppet::Type.type(:package).provide(:tdagent, parent: Puppet::Type.type(:package
 
   def initialize(value = {})
     super(value)
-    @repo_version = repo_version_get
+    @repo_version = repo_version_get(resource[:install_options])
     raise Puppet::Error, "repo_version is not specified in install_options" if @repo_version.nil?
   end
 
@@ -43,8 +43,7 @@ Puppet::Type.type(:package).provide(:tdagent, parent: Puppet::Type.type(:package
     end
   end
 
-  def repo_version_get
-    install_options = resource[:install_options]
+  def repo_version_get(install_options)
     install_options.each_with_index do |option, index|
       if option.is_a?(Hash) && option.key?('repo_version')
         return install_options.delete_at(index)['repo_version']

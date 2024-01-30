@@ -2,7 +2,7 @@
 define fluentd::plugin (
   String $plugin_ensure = present,
   Stdlib::Httpurl $plugin_source = 'https://rubygems.org',
-  Array[Variant[String, Hash]] $plugin_install_options = [],
+  Hash $plugin_install_options = {},
   String $plugin_provider = tdagent,
   String $repo_version = '4',
 ) {
