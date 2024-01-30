@@ -1,6 +1,12 @@
 Puppet::Type.type(:package).provide(:tdagent, parent: Puppet::Type.type(:package).provide(:gem)) do
   desc 'TD Agent provider'
 
+  def initialize(value = {})
+    super(value)
+    @repo_version = repo_version_get
+    raise Puppet::Error, "repo_version is not specified in install_options" if @repo_version.nil?
+  end
+
   def self.which_from_paths(command, paths)
     paths.each do |dir|
       dest = File.expand_path(File.join(dir, command))
@@ -36,15 +42,28 @@ Puppet::Type.type(:package).provide(:tdagent, parent: Puppet::Type.type(:package
   end
 
   def package_name
-    repo_version = resource[:install_options].find { |option| option['repo_version'] }['repo_version']
-    repo_version == '4' ? 'td-agent' : 'fluentd'
+    @repo_version == '4' ? 'td-agent' : 'fluentd'
+  end
+
+  def repo_version_get
+    install_options = resource[:install_options]
+    install_options.each_with_index do |option, index|
+      if option.is_a?(Hash) && option.key?('repo_version')
+        return install_options.delete_at(index)['repo_version']
+      elsif option.is_a?(String) && option == 'repo_version'
+        return install_options.delete_at(index)
+      end
+    end
+    nil
   end
 
   def create
-    repo_version = resource[:install_options].find { |option| option['repo_version'] }
-    command = [self.class.provider_command(repo_version), 'install', resource[:title]]
+    command = [self.class.provider_command(@repo_version), 'install', resource[:title]]
     command += ['-v', resource[:ensure]] unless resource[:ensure].nil? || resource[:ensure] == 'present'
-    command += ['--source', resource[:source]] unless resource[:source].nil?
+    
+    if resource[:source]
+      command += ['--source', resource[:source]]
+    end
 
     Array(resource[:install_options]).each do |option|
       case option
@@ -61,20 +80,33 @@ Puppet::Type.type(:package).provide(:tdagent, parent: Puppet::Type.type(:package
   end
 
   def destroy
-    command = [self.class.provider_command(resource[:repo_version]), 'uninstall', resource[:title]]
+    command = [self.class.provider_command(@repo_version), 'uninstall', resource[:title]]
     system(*command) or raise "Command failed: #{command.join(' ')}"
   end
-
+  
   def exists?
-    output = `#{self.class.provider_command(resource[:repo_version])} list --local`
+    output = `#{self.class.provider_command(@repo_version)} list --local`
     puts "exists? output: #{output}"
     output.include?(resource[:title])
   end
-
+  
   def version
-    output = `#{self.class.provider_command(resource[:repo_version])} list --local`
+    output = `#{self.class.provider_command(@repo_version)} list --local`
     puts "exists? output: #{output}"
     match = output.match(/#{Regexp.escape(resource[:name])}\s+\((\S+)\)/)
     match[1] if match
+  end
+
+  def properties
+    if exists?
+      {
+        ensure: :present,
+        version: version,
+      }
+    else
+      {
+        ensure: :absent,
+      }
+    end
   end
 end
