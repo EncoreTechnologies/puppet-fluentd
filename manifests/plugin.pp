@@ -7,12 +7,12 @@ define fluentd::plugin (
   String $repo_version = '4',
 ) {
   fluentd::package_wrapper { $title:
-    package_ensure          => $plugin_ensure,
-    package_install_options => $plugin_install_options,
-    package_provider        => $plugin_provider,
-    repo_version            => $fluentd::repo_version,
-    set_provider            => true,
-    notify                  => Class['fluentd::service'],
-    require                 => Class['fluentd::install'],
+    package_ensure         => $plugin_ensure,
+    plugin_install_options => $plugin_install_options,
+    package_provider       => $plugin_provider,
+    repo_version           => $fluentd::repo_version,
+    set_provider           => true,
+    notify                 => Class['fluentd::service'],
+    require                => Class['fluentd::install'],
   }
 }

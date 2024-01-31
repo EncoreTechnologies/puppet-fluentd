@@ -30,7 +30,6 @@ define fluentd::package_wrapper (
 
   package { $title:
     ensure          => $fluentd::package_ensure,
-    name            => $package_name,
     install_options => $plugin_install_options,
     provider        => $final_provider,
     require         => Class['fluentd::repo'],
