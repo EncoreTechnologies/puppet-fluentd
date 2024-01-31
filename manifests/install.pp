@@ -19,16 +19,18 @@ class fluentd::install inherits fluentd {
   }
 
   if $facts['os']['family'] == 'windows' {
-    package { $fluentd::package_name:
-      ensure   => $fluentd::package_ensure,
-      provider => $fluentd::package_provider,
-      require  => Class['fluentd::repo'],
+    fluentd::package_wrapper { $fluentd::package_name:
+      package_ensure   => $fluentd::package_ensure,
+      package_provider => $fluentd::package_provider,
+      repo_version     => $fluentd::repo_version,
+      require          => Class['fluentd::repo'],
     }
   } else {
-    package { $fluentd::package_name:
-      ensure   => $fluentd::package_ensure,
-      provider => $fluentd::package_provider,
-      require  => Class['fluentd::repo'],
+    fluentd::package_wrapper { $fluentd::package_name:
+      package_ensure   => $fluentd::package_ensure,
+      package_provider => $fluentd::package_provider,
+      repo_version     => $fluentd::repo_version,
+      require          => Class['fluentd::repo'],
     }
   }
 
