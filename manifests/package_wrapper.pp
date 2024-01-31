@@ -7,11 +7,11 @@
 # @param repo_version The version of the repository to use, '4' for 'td-agent' and '5' for 'fluent-package'.
 # @param set_provider A boolean that determines whether to set the provider for the package.
 define fluentd::package_wrapper (
-  String  $package_ensure,
-  String  $repo_version,
-  String  $package_provider,
-  Hash    $plugin_install_options = {},
-  Boolean $set_provider = false,
+  String            $package_ensure,
+  String            $repo_version,
+  Optional[String]  $package_provider = undef,
+  Hash              $plugin_install_options = {},
+  Boolean           $set_provider = false,
 ) {
   $package_name = $repo_version ? {
     '4'     => 'td-agent',
@@ -19,19 +19,20 @@ define fluentd::package_wrapper (
     default => fail("Unsupported repo_version ${fluentd::repo_version}")
   }
 
-  if $set_provider {
-    $package_provider = $fluentd::repo_version ? {
+  $final_provider = $set_provider ? {
+    true    => $repo_version ? {
       '4'     => 'tdagent',
       '5'     => 'fluentd',
       default => fail("Unsupported repo_version ${fluentd::repo_version}")
-    }
+    },
+    default => $package_provider
   }
 
   package { $title:
     ensure          => $fluentd::package_ensure,
     name            => $package_name,
     install_options => $plugin_install_options,
-    provider        => $package_provider,
+    provider        => $final_provider,
     require         => Class['fluentd::repo'],
   }
 }

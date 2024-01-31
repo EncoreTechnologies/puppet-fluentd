@@ -33,13 +33,6 @@ class fluentd (
 
   Class['fluentd::install'] -> Class['fluentd::service']
 
-# Add repo_version to each plugin
-  $plugins_with_repo_version = $plugins.reduce({}) |$memo, $pair| {
-    $title = $pair[0]
-    $params = $pair[1]
-    $memo + { $title => $params + { 'repo_version' => $repo_version } }
-  }
-
-  create_resources('fluentd::plugin', $plugins_with_repo_version)
+  create_resources('fluentd::plugin', $plugins)
   create_resources('fluentd::config', $configs)
 }
