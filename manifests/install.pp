@@ -35,7 +35,7 @@ class fluentd::install inherits fluentd {
   }
 
   # Ensure the parent directory exists
-  file { "/etc/${fluentd::package_path}":
+  file { $fluentd::parent_path:
     ensure => directory,
     owner  => $fluentd::config_owner,
     group  => $fluentd::config_group,
