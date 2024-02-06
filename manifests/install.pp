@@ -2,8 +2,8 @@
 class fluentd::install inherits fluentd {
   contain fluentd::repo
 
-  # Ensure the user exists
-  if $fluentd::config_owner {
+# Ensure the user exists
+  if $fluentd::config_owner and $fluentd::manage_user_group {
     user { $fluentd::config_owner:
       ensure => present,
       before => File[$fluentd::parent_path],
@@ -11,7 +11,7 @@ class fluentd::install inherits fluentd {
   }
 
   # Ensure the group exists
-  if $fluentd::config_group {
+  if $fluentd::config_group and $fluentd::manage_user_group {
     group { $fluentd::config_group:
       ensure => present,
       before => File[$fluentd::parent_path],
