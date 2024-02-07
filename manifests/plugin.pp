@@ -1,12 +1,9 @@
-# plugin.pp
+# Resource for installing a FluentD plugin
 define fluentd::plugin (
   String $plugin_ensure = present,
   Stdlib::Httpurl $plugin_source = 'https://rubygems.org',
   Hash $plugin_install_options = {},
-  String $plugin_provider = $facts['os']['family'] ? {
-    'windows' => 'chocolatey',
-    default   => 'tdagent'
-  },
+  String $plugin_provider = tdagent,
   String $repo_version = '4',
 ) {
   fluentd::package_wrapper { $title:
