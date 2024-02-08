@@ -1,4 +1,7 @@
-# Common fluentd parameters
+# `fluentd::params` is a Puppet class that sets common parameters for the Fluentd module.
+# It sets default values for a number of variables, including the repository name and version, 
+# the package name, the owner and group of the package, the service name, and the configuration file name.
+# It also sets different values for these variables based on the version of the repository and the operating system.
 class fluentd::params {
   $repo_name = 'treasuredata'
   $repo_desc = 'TreasureData'

@@ -1,5 +1,8 @@
-# Configures the FluentD repo
-class fluentd::repo inherits fluentd {
+# This file defines a Puppet class for managing the FluentD repository.
+# It sets the repository source and key based on the operating system.
+# It also manages the repository package using the package resource type.
+class fluentd::repo {
+  include fluentd
   if $fluentd::repo_manage {
     $version = $fluentd::repo_version
     case $facts['os']['family'] {

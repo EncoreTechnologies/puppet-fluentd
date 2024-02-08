@@ -1,6 +1,6 @@
 # Resource for managing the FluentD service
-# Resource for managing the FluentD service
-class fluentd::service inherits fluentd {
+class fluentd::service {
+  include fluentd
   if $fluentd::service_manage {
     # Determine the service name based on the OS family and Fluentd version
     $service_name = $facts['os']['family'] ? {

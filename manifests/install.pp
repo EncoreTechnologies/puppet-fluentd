@@ -1,5 +1,7 @@
-# Installs FluentD
-class fluentd::install inherits fluentd {
+# `fluentd::install` is a Puppet class that manages the installation of Fluentd.
+# It uses the `fluentd::package_wrapper` defined type to manage the Fluentd package.
+class fluentd::install {
+  include fluentd
   contain fluentd::repo
 
 # Ensure the user exists
