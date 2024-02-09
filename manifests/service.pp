@@ -5,7 +5,11 @@ class fluentd::service {
     # Determine the service name based on the OS family and Fluentd version
     $_service_name = $facts['os']['family'] ? {
       'windows' => $fluentd::service_name_windows,
-      default   => $fluentd::service_name,
+      default   => $fluentd::repo_version ? {
+        '4' => 'td-agent',
+        '5' => 'fluentd',
+        default => $fluentd::service_name,
+      },
     }
 
     service { $_service_name:
