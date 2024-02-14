@@ -13,12 +13,6 @@ define fluentd::package_wrapper (
   Hash              $plugin_install_options = {},
   Boolean           $set_provider = false,
 ) {
-  $package_name = $repo_version ? {
-    '4'     => 'td-agent',
-    '5'     => 'fluent-package',
-    default => fail("Unsupported repo_version ${fluentd::repo_version}")
-  }
-
   $final_provider = $package_provider == 'chocolatey' ? {
     true    => $package_provider,
     default => $set_provider ? {
@@ -31,6 +25,9 @@ define fluentd::package_wrapper (
     }
   }
 
+  # `$title` in Puppet is the name of the defined resource. In `fluentd::package_wrapper`, it's the package name.
+  # In `fluentd::install`, `$fluentd::package_name` is passed as `$title`.
+  # In `fluentd::plugin`, the plugin name is passed as `$title`.
   package { $title:
     ensure          => $fluentd::package_ensure,
     install_options => $plugin_install_options,

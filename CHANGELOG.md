@@ -5,6 +5,8 @@
 - Adding support for v5 and setting default
   fluentd/td-agent version from `v4` to `v5`
 
+- Dropping support for v3
+
   Contributed by Alex Chrystal (@asktheaxis)
 
 ## 2021-11-02 - Release v1.2.0
