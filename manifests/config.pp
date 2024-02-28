@@ -1,5 +1,10 @@
-# Resource for populating a FluentD config
-define fluentd::config($config) {
+# @summary Resource for populating a FluentD config
+#
+# @api private
+#
+define fluentd::config (
+  Data $config
+) {
   include fluentd
 
   file { "${fluentd::config_path}/${title}":
