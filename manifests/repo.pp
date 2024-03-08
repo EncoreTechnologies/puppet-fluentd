@@ -3,6 +3,7 @@
 # It also manages the repository package using the package resource type.
 class fluentd::repo {
   include fluentd
+
   if $fluentd::repo_manage {
     $version = $fluentd::repo_version
     case $facts['os']['family'] {
@@ -13,7 +14,7 @@ class fluentd::repo {
         }
 
         $repo_url = pick($fluentd::repo_url,
-                          "https://packages.treasuredata.com/${version}/${os_name}/\$releasever/\$basearch")
+        "https://packages.treasuredata.com/${version}/${os_name}/\$releasever/\$basearch")
         yumrepo { $fluentd::repo_name:
           descr    => $fluentd::repo_desc,
           baseurl  => $repo_url,
@@ -30,10 +31,10 @@ class fluentd::repo {
         }
       }
       'Debian': {
-        $distro_id = downcase($facts['lsbdistid'])
-        $distro_codename = $facts['lsbdistcodename']
+        $distro_id = downcase($facts['os']['name'])
+        $distro_codename = $facts['os']['distro']['codename']
         $repo_url = pick($fluentd::repo_url,
-                          "https://packages.treasuredata.com/${version}/${distro_id}/${distro_codename}/")
+        "https://packages.treasuredata.com/${version}/${distro_id}/${distro_codename}/")
 
         apt::source { $fluentd::repo_name:
           location     => $repo_url,
@@ -54,7 +55,7 @@ class fluentd::repo {
         Class['Apt::Update'] -> Package[$fluentd::package_name]
       }
       default: {
-        fail("Unsupported os family: ${facts['osfamily']}")
+        fail("Unsupported os family: ${facts['os']['family']}")
       }
     }
   }

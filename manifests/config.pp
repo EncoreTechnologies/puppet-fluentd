@@ -24,7 +24,9 @@
 # and `fluentd::config_file_mode`, respectively. The configuration file will require the `fluentd::install` class, 
 # meaning that Fluentd must be installed before the configuration file is managed. The configuration file will notify the 
 # `fluentd::service` class, meaning that the Fluentd service will be refreshed whenever the configuration file changes.
-define fluentd::config ($config) {
+define fluentd::config (
+  Hash $config
+) {
   include fluentd
 
   file { "${fluentd::config_path}/${title}":
