@@ -59,14 +59,14 @@ Puppet::Type.type(:package).provide :fluentd, parent: :gem do
     if Puppet::Util::Platform.windows?
       gem_cmd = 'fluent-gem.bat'
       search_paths = [
-        'C:\\opt\\td-agent\\bin',
-        'C:\\opt\\td-agent\\embedded\\bin',
+        'C:\\opt\\fluent\\bin',
+        'C:\\opt\\fluent\\embedded\\bin',
       ]
     else
       gem_cmd = 'fluent-gem'
       search_paths = [
         '/usr/sbin',
-        '/opt/td-agent/usr/sbin',
+        '/opt/fluent/usr/sbin',
       ]
     end
     which_from_paths(gem_cmd, search_paths)

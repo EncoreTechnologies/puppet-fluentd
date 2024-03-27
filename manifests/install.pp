@@ -20,20 +20,11 @@ class fluentd::install {
     }
   }
 
-  if $facts['os']['family'] == 'windows' {
-    fluentd::package_wrapper { $fluentd::package_name:
-      package_ensure   => $fluentd::package_ensure,
-      package_provider => $fluentd::package_provider,
-      repo_version     => $fluentd::repo_version,
-      require          => Class['fluentd::repo'],
-    }
-  } else {
-    fluentd::package_wrapper { $fluentd::package_name:
-      package_ensure   => $fluentd::package_ensure,
-      package_provider => $fluentd::package_provider,
-      repo_version     => $fluentd::repo_version,
-      require          => Class['fluentd::repo'],
-    }
+  fluentd::package_wrapper { $fluentd::package_name:
+    package_ensure   => $fluentd::package_ensure,
+    package_provider => $fluentd::package_provider,
+    repo_version     => $fluentd::repo_version,
+    require          => Class['fluentd::repo'],
   }
 
   # Ensure the parent directory exists
