@@ -42,7 +42,7 @@ class fluentd (
   Boolean                     $repo_manage       = $fluentd::params::repo_manage,
   String                      $repo_name         = $fluentd::params::repo_name,
   String                      $repo_desc         = $fluentd::params::repo_desc,
-  String                      $repo_version      = $fluentd::params::repo_version,
+  String                      $repo_version      = '4',
   Optional[Stdlib::Httpurl]   $repo_url          = undef,
   Boolean                     $repo_enabled      = $fluentd::params::repo_enabled,
   Boolean                     $repo_gpgcheck     = $fluentd::params::repo_gpgcheck,

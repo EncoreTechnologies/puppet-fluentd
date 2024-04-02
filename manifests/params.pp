@@ -2,30 +2,16 @@
 # It sets default values for a number of variables, including the repository name and version, 
 # the package name, the owner and group of the package, the service name, and the configuration file name.
 # It also sets different values for these variables based on the version of the repository and the operating system.
-class fluentd::params {
+class fluentd::params inherits fluentd::globals {
   $repo_name = 'treasuredata'
   $repo_desc = 'TreasureData'
-  $repo_version = '4'
+  $repo_version = $fluentd::globals::repo_version
 
-  case $repo_version {
-    '4': {
-      $package_name = 'td-agent'
-      $package_path = 'td-agent'
-      $owner_group_name = 'td-agent'
-      $service_name = 'td-agent'
-      $config_file_name = 'td-agent.conf'
-    }
-    '5': {
-      $package_name = 'fluent-package'
-      $owner_group_name = 'fluentd'
-      $package_path = 'fluent'
-      $service_name = 'fluentd'
-      $config_file_name = 'fluentd.conf'
-    }
-    default: {
-      fail("Unsupported repo_version ${repo_version}")
-    }
-  }
+  $package_name = $fluentd::globals::package_name
+  $package_path = $fluentd::globals::package_path
+  $owner_group_name = $fluentd::globals::owner_group_name
+  $service_name = $fluentd::globals::service_name
+  $config_file_name = $fluentd::globals::config_file_name
 
   case $facts['os']['family'] {
     'RedHat', 'Debian': {
