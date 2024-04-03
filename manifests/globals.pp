@@ -29,7 +29,7 @@ class fluentd::globals (
   $owner_group_name = $_owner_group_name ? {
     undef   => $repo_version ? {
       '4'   => 'td-agent',
-      '5'   => 'fluent',
+      '5'   => 'fluentd',
       default => fail("Unsupported repo_version: ${repo_version}")
     },
     default => $_owner_group_name,
