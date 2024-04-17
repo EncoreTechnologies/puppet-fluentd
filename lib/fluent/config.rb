@@ -23,7 +23,7 @@ module FluentConfig
           result << directive_tag(plugin_type, tag_pattern) do
             plugin_config.keys.sort.reduce('') do |body, parameter|
               body << directive_body(
-                plugin_type == 'system' ? parameter : format_parameter(parameter),
+                (plugin_type == 'system' ? parameter : format_parameter(parameter)),
                 plugin_config.fetch(parameter),
               )
             end

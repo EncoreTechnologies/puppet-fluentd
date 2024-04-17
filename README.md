@@ -12,6 +12,10 @@ Install, configure, and manage Fluentd data collector.
 * Manages `td-agent` service
 * Installs Fluentd gem plugins
 
+## Support Notice
+
+As of the latest update, we are dropping support for Fluentd/TD Agent 3. Please ensure you are using Fluentd/TD Agent 4 or later.
+
 ## Usage Examples
 
 ### Basic
@@ -139,7 +143,7 @@ Default value: 'TreasureData'
 
 #### `repo_url`
 
-Default value: 'http://packages.treasuredata.com/2/redhat/$releasever/$basearch'
+Default value: 'https://packages.treasuredata.com/2/redhat/$releasever/$basearch'
 
 #### `repo_enabled`
 

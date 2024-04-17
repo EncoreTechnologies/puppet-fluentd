@@ -1,36 +1,37 @@
-# Common fluentd parameters
-class fluentd::params {
+# `fluentd::params` is a Puppet class that sets common parameters for the Fluentd module.
+# It sets default values for a number of variables, including the repository name and version, 
+# the package name, the owner and group of the package, the service name, and the configuration file name.
+# It also sets different values for these variables based on the version of the repository and the operating system.
+class fluentd::params inherits fluentd::globals {
   $repo_name = 'treasuredata'
   $repo_desc = 'TreasureData'
-  $repo_version = '4'
+  $repo_version = $fluentd::globals::repo_version
+
+  $package_name = $fluentd::globals::package_name
+  $package_path = $fluentd::globals::package_path
+  $owner_group_name = $fluentd::globals::owner_group_name
+  $service_name = $fluentd::globals::service_name
+  $config_file_name = $fluentd::globals::config_file_name
 
   case $facts['os']['family'] {
-    'RedHat': {
-      $config_file = '/etc/td-agent/td-agent.conf'
+    'RedHat', 'Debian': {
+      $manage_user_group = true
+      $parent_path = "/etc/${package_path}"
+      $config_file = "/etc/${package_path}/${service_name}.conf"
       $config_file_mode = '0640'
-      $config_path = '/etc/td-agent/config.d'
+      $config_path = "/etc/${package_path}/config.d"
       $config_path_mode = '0750'
-      $config_owner = 'td-agent'
-      $config_group = 'td-agent'
+      $config_owner = $owner_group_name
+      $config_group = $owner_group_name
       $package_provider = undef
       $repo_manage = true
-      $service_name = 'td-agent'
-    }
-    'Debian': {
-      $config_file = '/etc/td-agent/td-agent.conf'
-      $config_file_mode = '0640'
-      $config_path = '/etc/td-agent/config.d'
-      $config_path_mode = '0750'
-      $config_owner = 'td-agent'
-      $config_group = 'td-agent'
-      $package_provider = undef
-      $repo_manage = true
-      $service_name = 'td-agent'
     }
     'windows': {
-      $config_file = 'C:/opt/td-agent/etc/td-agent/td-agent.conf'
+      $manage_user_group = false
+      $parent_path = "C:/opt/${package_path}"
+      $config_file = "C:/opt/${package_path}/etc/${package_path}/${config_file_name}"
       $config_file_mode = undef
-      $config_path = 'C:/opt/td-agent/etc/td-agent/config.d'
+      $config_path = "C:/opt/${package_path}/etc/${package_path}/config.d"
       $config_path_mode = undef
       $config_owner = 'Administrator'
       $config_group = 'Administrator'
@@ -39,7 +40,7 @@ class fluentd::params {
       # setup the Chocolatey sources correctly
       $repo_manage = false
       # windows service uses a different name
-      $service_name = 'fluentdwinsvc'
+      $service_name_windows = 'fluentdwinsvc'
     }
     default: {
       fail("Unsupported osfamily ${facts['os']['family']}")
@@ -51,7 +52,6 @@ class fluentd::params {
   $repo_gpgkey = 'https://packages.treasuredata.com/GPG-KEY-td-agent'
   $repo_gpgkeyid = 'BEE682289B2217F45AF4CC3F901F9177AB97ACBE'
 
-  $package_name = 'td-agent'
   $package_ensure = present
 
   $service_ensure = running
