@@ -18,7 +18,7 @@ class fluentd::params inherits fluentd::globals {
       $manage_user_group = true
       $parent_path = "/etc/${package_path}"
       $config_file = "/etc/${package_path}/${service_name}.conf"
-      $config_file_mode = '0640'
+      $config_file_mode = '0644'
       $config_path = "/etc/${package_path}/config.d"
       $config_path_mode = '0750'
       $config_owner = $owner_group_name
