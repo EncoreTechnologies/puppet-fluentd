@@ -29,7 +29,10 @@ class fluentd::globals (
   $owner_group_name = $_owner_group_name ? {
     undef   => $repo_version ? {
       '4'   => 'td-agent',
-      '5'   => 'fluentd',
+      '5'   => $facts['os']['family'] ? {
+        'Debian' => '_fluentd',
+        default  => 'fluentd',
+      },
       default => fail("Unsupported repo_version: ${repo_version}")
     },
     default => $_owner_group_name,
