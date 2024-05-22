@@ -1,6 +1,7 @@
 # `fluentd::init` is the main entry point for the Fluentd module.
 # It includes the other classes in the module and manages the Fluentd service.
 #
+# @param manage_user_group Whether to manage the Fluentd user and group.
 # @param repo_manage Whether to manage the Fluentd repository.
 # @param repo_name The name of the repository.
 # @param repo_desc The description of the repository.
@@ -39,6 +40,7 @@
 # This will include the `fluentd::install`, `fluentd::config`, and `fluentd::service` classes, 
 # which will manage the installation, configuration, and service of Fluentd, respectively.
 class fluentd (
+  Boolean                     $manage_user_group = $fluentd::params::manage_user_group,
   Boolean                     $repo_manage       = $fluentd::params::repo_manage,
   String                      $repo_name         = $fluentd::params::repo_name,
   String                      $repo_desc         = $fluentd::params::repo_desc,
