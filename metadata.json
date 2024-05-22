@@ -1,6 +1,6 @@
 {
   "name": "encore-fluentd",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "author": "encore",
   "summary": "Installs, configures, and manages Fluentd data collector",
   "license": "Apache-2.0",
@@ -29,14 +29,12 @@
     {
       "operatingsystem": "CentOS",
       "operatingsystemrelease": [
-        "7",
         "8"
       ]
     },
     {
       "operatingsystem": "RedHat",
       "operatingsystemrelease": [
-        "7",
         "8",
         "9"
       ]
@@ -44,9 +42,9 @@
     {
       "operatingsystem": "Ubuntu",
       "operatingsystemrelease": [
-        "16.04",
         "18.04",
-        "20.04"
+        "20.04",
+        "22.04"
       ]
     },
     {
