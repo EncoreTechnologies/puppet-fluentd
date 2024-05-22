@@ -1,5 +1,13 @@
 ## Development
 
+## 2024-05-22 - Release v2.0.1
+
+- Fixed default version v5 logic.
+
+- Fixed install order to resolve requirement for duplicate puppet agent runs.
+
+- Update code for latest Puppet styling guide.
+
 ## 2024-1-17 - Release v2.0.0
 
 - Adding support for v5 and setting default
