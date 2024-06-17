@@ -27,7 +27,6 @@ class fluentd::install {
     require          => Class['fluentd::repo'],
   }
 
-  
   case $facts['os']['family'] {
     'RedHat', 'Debian': {
       file { $fluentd::parent_path:
@@ -58,13 +57,13 @@ class fluentd::install {
     'windows': {
       # Ensure the parent directory exists
       $config_path_parts = split($fluentd::config_path, '/')
-      notice("config_path_parts: ${config_path_parts}")
-      $config_path_base = $config_path_parts[0] + '/' + $config_path_parts[1]
-      notice("config_path_base: ${config_path_base}")
-      $config_path_children = delete_at($config_path_parts, [0,1])
-      notice("config_path_children: ${config_path_children}")
-      $test_path = $config_path_children.reduce($config_path_base) |$path, $child| { 
-        notice("path: ${path}, child: ${child}")
+      echo { "config_path_parts: ${config_path_parts}": }
+      $config_path_base = values_at($config_path_parts, 0) + '/' + values_at($config_path_parts, 1)
+      echo { "config_path_base: ${config_path_base}": }
+      $config_path_children = delete_at($config_path_parts, 0)
+      echo { "config_path_children: ${config_path_children}": }
+      $test_path = $config_path_children.reduce($config_path_base) |$path, $child| {
+        echo { "path: ${path}, child: ${child}": }
         "${path}/${child}"
       }
     }
