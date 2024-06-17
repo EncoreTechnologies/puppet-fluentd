@@ -27,29 +27,49 @@ class fluentd::install {
     require          => Class['fluentd::repo'],
   }
 
-  # Ensure the parent directory exists
-  file { $fluentd::parent_path:
-    ensure => directory,
-    owner  => $fluentd::config_owner,
-    group  => $fluentd::config_group,
-    mode   => $fluentd::config_path_mode,
-  }
+  
+  case $facts['os']['family'] {
+    'RedHat', 'Debian': {
+      file { $fluentd::parent_path:
+        ensure => directory,
+        owner  => $fluentd::config_owner,
+        group  => $fluentd::config_group,
+        mode   => $fluentd::config_path_mode,
+      }
 
-  -> file { $fluentd::config_path:
-    ensure  => directory,
-    owner   => $fluentd::config_owner,
-    group   => $fluentd::config_group,
-    mode    => $fluentd::config_path_mode,
-    recurse => $fluentd::purge_config_dir,
-    force   => true,
-    purge   => $fluentd::purge_config_dir,
-  }
+      -> file { $fluentd::config_path:
+        ensure  => directory,
+        owner   => $fluentd::config_owner,
+        group   => $fluentd::config_group,
+        mode    => $fluentd::config_path_mode,
+        recurse => $fluentd::purge_config_dir,
+        force   => true,
+        purge   => $fluentd::purge_config_dir,
+      }
 
-  -> file { $fluentd::config_file:
-    ensure => file,
-    source => "puppet:///modules/fluentd/${fluentd::config_file_name}",
-    owner  => $fluentd::config_owner,
-    group  => $fluentd::config_group,
-    mode   => $fluentd::config_file_mode,
+      -> file { $fluentd::config_file:
+        ensure => file,
+        source => "puppet:///modules/fluentd/${fluentd::config_file_name}",
+        owner  => $fluentd::config_owner,
+        group  => $fluentd::config_group,
+        mode   => $fluentd::config_file_mode,
+      }
+    }
+    'windows': {
+      # Ensure the parent directory exists
+      $config_path_parts = split($fluentd::config_path, '/')
+      notice("config_path_parts: ${config_path_parts}")
+      $config_path_base = $config_path_parts[0] + '/' + $config_path_parts[1]
+      notice("config_path_base: ${config_path_base}")
+      $config_path_children = delete_at($config_path_parts, [0,1])
+      notice("config_path_children: ${config_path_children}")
+      $test_path = $config_path_children.reduce($config_path_base) |$path, $child| { 
+        notice("path: ${path}, child: ${child}")
+        "${path}/${child}"
+      }
+    }
+    default: {
+      fail("Unsupported osfamily ${facts['os']['family']}")
+    }
   }
 }
