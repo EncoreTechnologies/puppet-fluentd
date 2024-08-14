@@ -25,12 +25,19 @@ define fluentd::package_wrapper (
     }
   }
 
+  if $final_provider == 'chocolatey' {
+    $_plugin_install_options = undef
+  }
+  else {
+    $_plugin_install_options = $plugin_install_options
+  }
+
   # `$title` in Puppet is the name of the defined resource. In `fluentd::package_wrapper`, it's the package name.
   # In `fluentd::install`, `$fluentd::package_name` is passed as `$title`.
   # In `fluentd::plugin`, the plugin name is passed as `$title`.
   package { $title:
     ensure          => $fluentd::package_ensure,
-    install_options => $plugin_install_options,
+    install_options => $_plugin_install_options,
     provider        => $final_provider,
     require         => Class['fluentd::repo'],
   }

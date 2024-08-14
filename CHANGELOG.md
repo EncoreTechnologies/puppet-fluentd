@@ -1,5 +1,11 @@
 ## Development
 
+## 2024-08-14 - Release v2.0.2
+
+- Fixed issues creating config files and directories on windows systems.
+
+- Fixed issue with chocolatey installs attempting to install empty package.
+
 ## 2024-05-22 - Release v2.0.1
 
 - Fixed default version v5 logic.
