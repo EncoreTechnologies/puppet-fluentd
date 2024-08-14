@@ -26,7 +26,7 @@ define fluentd::package_wrapper (
   }
 
   if $final_provider == 'chocolatey' {
-    $_plugin_install_options = '{}'
+    $_plugin_install_options = undef
   }
   else {
     $_plugin_install_options = $plugin_install_options
