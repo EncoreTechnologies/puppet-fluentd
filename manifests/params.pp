@@ -50,8 +50,16 @@ class fluentd::params inherits fluentd::globals {
 
   $repo_enabled = true
   $repo_gpgcheck = true
-  $repo_gpgkey = 'https://packages.treasuredata.com/GPG-KEY-td-agent'
-  $repo_gpgkeyid = 'BEE682289B2217F45AF4CC3F901F9177AB97ACBE'
+
+  if $repo_version == '4' {
+    $repo_gpgkey = 'https://packages.treasuredata.com/GPG-KEY-td-agent'
+    $repo_gpgkeyid = 'BEE682289B2217F45AF4CC3F901F9177AB97ACBE'
+  } elsif $repo_version == '5' {
+    $repo_gpgkey = 'https://packages.treasuredata.com/GPG-KEY-fluent-package'
+    $repo_gpgkeyid = 'B40948B6A3B80E90F40E841F977D7A0943FA320E'
+  } else {
+    fail("Unsupported repo_version: ${repo_version}")
+  }
 
   $package_ensure = present
 
