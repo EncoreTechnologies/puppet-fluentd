@@ -1,5 +1,9 @@
 ## Development
 
+## 2024-08-15 - Release v2.0.3
+
+- Fixed GPG URL based on repo version.
+
 ## 2024-08-14 - Release v2.0.2
 
 - Fixed issues creating config files and directories on windows systems.
