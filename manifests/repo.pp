@@ -15,19 +15,20 @@ class fluentd::repo {
 
         $repo_url = pick($fluentd::repo_url,
         "https://packages.treasuredata.com/${version}/${os_name}/\$releasever/\$basearch")
+
+        exec { 'import_rpm_gpg_key':
+          command     => "rpm --import ${fluentd::repo_gpgkey}",
+          path        => '/bin:/usr/bin',
+          refreshonly => true,
+        }
+
         yumrepo { $fluentd::repo_name:
           descr    => $fluentd::repo_desc,
           baseurl  => $repo_url,
           enabled  => $fluentd::repo_enabled,
           gpgcheck => $fluentd::repo_gpgcheck,
           gpgkey   => $fluentd::repo_gpgkey,
-          notify   => Exec['rpmkey'],
-        }
-
-        exec { 'rpmkey':
-          command     => "rpm --import ${fluentd::repo_gpgkey}",
-          path        => '/bin:/usr/bin',
-          refreshonly => true,
+          notify   => Exec['import_rpm_gpg_key'],
         }
       }
       'Debian': {
