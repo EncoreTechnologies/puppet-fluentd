@@ -1,5 +1,10 @@
 ## Development
 
+## 2024-10-25 - Release v2.1.0
+
+  - Update metadata information.
+  - Update PDK version
+
 ## 2024-08-15 - Release v2.0.3
 
 - Fixed GPG URL based on repo version.
