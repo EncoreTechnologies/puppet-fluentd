@@ -4,6 +4,7 @@
 module FluentConfig
   BUILTIN_PARAMETERS = ['type', 'id', 'label', 'log_level'].freeze
   BUILTIN_PARAMETER_PREFIX = '@'.freeze
+  PREFIX_EXCEPTION_SCOPES = ['system', 'metric'].freeze
   TAG_PATTERN = 'tag_pattern'.freeze
   BODY_PADDING = '  '.freeze
 
@@ -23,7 +24,7 @@ module FluentConfig
           result << directive_tag(plugin_type, tag_pattern) do
             plugin_config.keys.sort.reduce('') do |body, parameter|
               body << directive_body(
-                (plugin_type == 'system' ? parameter : format_parameter(parameter)),
+                format_parameter(parameter, plugin_type),
                 plugin_config.fetch(parameter),
               )
             end
@@ -62,12 +63,10 @@ module FluentConfig
       end
     end
 
-    def format_parameter(parameter)
-      if BUILTIN_PARAMETERS.include?(parameter)
-        BUILTIN_PARAMETER_PREFIX + parameter
-      else
-        parameter
-      end
+    def format_parameter(parameter, scope)
+      return parameter if PREFIX_EXCEPTION_SCOPES.include? scope
+      return parameter unless BUILTIN_PARAMETERS.include? parameter
+      BUILTIN_PARAMETER_PREFIX + parameter
     end
   end
 end
